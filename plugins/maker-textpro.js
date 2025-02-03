@@ -71,82 +71,82 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/sand?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'cubic':
+      case 'cubic':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/cubic?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'nigeria':
+      case 'nigeria':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/nigeria?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'gaming':
+      case 'gaming':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/gaming?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'gold':
+      case 'gold':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/gold?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'splat':
+      case 'splat':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/paintsplat?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'color':
+      case 'color':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/colorful?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'matrix':
+      case 'matrix':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/matrix?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'wings':
+      case 'wings':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/angelwing?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'papercut':
+      case 'papercut':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/papercut?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'gsilver':
+      case 'gsilver':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/gsilver?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'hacker':
+      case 'hacker':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/hacker?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'balon':
+      case 'balon':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/ballon?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'galaxy2':
+      case 'galaxy2':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/galaxy2?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'typo':
+      case 'typo':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/typography?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'circle':
+      case 'circle':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/circlemascot?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
 
-         case 'star':
+      case 'star':
          if (!text) throw tee;
          apiUrl = `https://globaltech-api.onrender.com/api/ephoto/star?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
@@ -175,11 +175,14 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
    }
 }
    
+// Updated help and command properties
 handler.help = [
-   'mascot', 'logomaker', 'bpstyle', 'writetext', 'glossy', 'cartoon', 'pixelglitch', 'advancedglow', 
-   'lighteffect', 'texteffect', 'galaxy', 'beach', 'clouds'
-]
-handler.tags = ['maker']
-handler.command = /^(mascot|logomaker|bpstyle|pixelglitch|advancedglow|lighteffect|texteffect|galaxy|writetext|glossy|cartoon|beach|clouds)$/i
+   'mascot', 'foggy', 'golden', 'wgalaxy', 'metallic', 'gradient', 'snake', '3dsilver', 'jewel', 
+   'metal', 'galaxy', 'blackpink', 'sand', 'cubic', 'nigeria', 'gaming', 'gold', 'splat', 'color', 
+   'matrix', 'wings', 'papercut', 'gsilver', 'hacker', 'balon', 'galaxy2', 'typo', 'circle', 'star'
+];
+handler.tags = ['maker'];
+handler.command = /^(mascot|foggy|golden|wgalaxy|metallic|gradient|snake|3dsilver|jewel|metal|galaxy|blackpink|sand|cubic|nigeria|gaming|gold|splat|color|matrix|wings|papercut|gsilver|hacker|balon|galaxy2|typo|circle|star)$/i;
 
 export default handler;
+            
