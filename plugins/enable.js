@@ -206,12 +206,22 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       global.opts['gconly'] = isEnable
       break
 
+      case 'self':
+      isAll = true
+      if (!isROwner) {
+        global.dfail('rowner', m, conn)
+        throw false
+      }
+      global.opts['self'] = isEnable
+      break
+
+      
     default:
       if (!/[01]/.test(command))
         return m.reply(`
 ≡ List of options
 
-◈──『 *ADMIN*』───⳹
+◈──『 *ADMIN*』
 ⛊ welcome
 ⛊ antilink
 ⛊ nsfw
@@ -220,17 +230,17 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
 ⛊ jarvis
 ⛊ antispam
 ⛊ antitoxic
-╰──────────⳹ 
-◈──『 *USERS*』───⳹
+╰──────────❍ 
+◈──『 *USERS*』
 ⛊ autolevelup
 ⛊ chatbot 
-╰──────────⳹
-◈──『 *OWNER*』───⳹
+╰──────────❍
+◈──『 *OWNER*』
 ⛊ onlydm
 ⛊ grouponly
 ⛊ autotype
 ⛊ autobio
-╰──────────⳹
+╰──────────❍
 *📌 Example :*
 *${usedPrefix}on* welcome
 *${usedPrefix}off* welcome
@@ -249,4 +259,3 @@ handler.tags = ['config']
 handler.command = /^((en|dis)able|(turn)?o(n|ff)|[01])$/i
 
 export default handler
-            
