@@ -80,9 +80,9 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
       const response = await fetch(apiUrl);
       const data = await response.json();
 
-      if (data.success && data.result && data.result.image_url) {
+      if (data.success && data.result && data.result.imageUrl) {
          // Send the image to the user
-         conn.sendFile(m.chat, data.result.image_url, 'logo.png', `*𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 © 𝙼𝙴𝙶𝙰-𝙰𝙸*`, m);
+         conn.sendFile(m.chat, data.result.imageUrl, 'logo.png', `*𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 © 𝙼𝙴𝙶𝙰-𝙰𝙸*`, m);
          m.react(done);
       } else {
          throw 'Failed to generate the image. Please try again later.';
