@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
    let tee = `✳️ ${mssg.notext}\n\n📌 ${mssg.example}: *${usedPrefix + command}* MEGA AI`
-   m.react(rwait)
+   m.react('⌛')
 
    let apiUrl;
    switch (command) {
@@ -85,7 +85,7 @@ try {
       const imageUrl = data.result.imageUrl;
       const fileExtension = imageUrl.split('.').pop(); // Extract the file extension
       conn.sendFile(m.chat, imageUrl, `logo.${fileExtension}`, `*𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 © 𝙼𝙴𝙶𝙰-𝙰𝙸*`, m);
-      m.react(done);
+      m.react('✅');
    } else {
       throw 'Failed to generate the image. Please try again later.';
    }
