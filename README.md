@@ -46,7 +46,6 @@ set the Env Vars.
 | SESSION_ID | That You Have Got Via Pairing |
 | PREFIX | put any one symbol here except @,# and + , leave it Blank if you want to use multi prefix |
 | MODE | mode public or private |
-| autoRead | make it true if you want bot to read messages |
 | statusview | make it true if you want bot to view status | 
 | OWNERS | owner number e.g 923444844060 | 
 | BOTNAME | Your Bot Name | 
