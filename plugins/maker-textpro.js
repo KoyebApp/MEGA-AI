@@ -8,7 +8,7 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
    switch (command) {
       case 'mascot':
          if (!text) throw tee;
-         apiUrl = `https://globaltech-api.onrender.com/api/ephoto/mascot?apikey=APIKEY&text==${encodeURIComponent(text)}`;
+         apiUrl = `https://globaltech-api.onrender.com/api/ephoto/mascot?apikey=APIKEY&text=${encodeURIComponent(text)}`;
          break;
          
       case 'logomaker':
