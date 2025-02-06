@@ -8,7 +8,6 @@ export async function before(m) {
   )
     ? 'composing'
     : 'available'
-    : 'unavailable'
 
   if (presenceStatus) await this.sendPresenceUpdate(presenceStatus, m.chat)
 }
