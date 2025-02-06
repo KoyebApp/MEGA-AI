@@ -6,17 +6,19 @@ import fs from 'fs'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const defaultOwner = '923444844060';
+const ownervb = process.env.OWNERS || "917605902011;GURU;6281255369012;Ash"
 
-
-// Check for the OWNERS environment variable; if not found, use the default
-const ownervb = process.env.OWNERS || process.env.OWNER_NUMBER || '' ; // put your number here
 
 const ownerlist = ownervb.split(';');
 
 global.owner = [];
-for (let i = 0; i < ownerlist.length; i++) {
-    global.owner.push([ownerlist[i], true]);
+for (let i = 0; i < ownerlist.length; i += 2) {
+    const owner = [
+        ownerlist[i],            
+        ownerlist[i + 1],         
+        true                        
+    ];
+    global.owner.push(owner);
 }
 //
 global.botname = process.env.BOTNAME || 'MEGA-AI';
