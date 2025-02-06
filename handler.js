@@ -157,7 +157,7 @@ export async function handler(chatUpdate) {
       if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
       if (settings) {
         if (!('self' in settings)) settings.self = false
-        if (!('Online' in settings)) settings.Online = true
+        if (!('Online' in settings)) settings.Online = false
         if (!('autoread' in settings)) settings.autoread = false
         if (!('restrict' in settings)) settings.restrict = false
         if (!('restartDB' in settings)) settings.restartDB = 0
@@ -165,7 +165,7 @@ export async function handler(chatUpdate) {
       } else
         global.db.data.settings[this.user.jid] = {
           self: false,
-          Online: true,
+          Online: false,
           autoread: false,
           restrict: false,
           restartDB: 0,
