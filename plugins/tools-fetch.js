@@ -5,6 +5,8 @@ let handler = async (m, { text, conn }) => {
     if (!/^https?:\/\//.test(text)) throw `✳️ ${mssg.noLink('http:// o https://')}`
     let _url = new URL(text)
     let url = global.API(_url.origin, _url.pathname, Object.fromEntries(_url.searchParams.entries()), 'APIKEY')
+    console.log(global.API)
+    
     let res = await fetch(url)
     if (res.headers.get('content-length') > 100 * 1024 * 1024 * 1024) {
         // delete res
