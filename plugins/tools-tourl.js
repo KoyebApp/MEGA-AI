@@ -18,30 +18,30 @@ let handler = async m => {
   }
 
   try {
-    // ✅ Correct: Use fileTypeFromBuffer instead of fromBuffer
     const fileType = await fileTypeFromBuffer(mediaBuffer)
     if (!fileType?.ext) throw '❌ Could not determine file type.'
 
-    // Prepare form data for Uguu.se
     const form = new FormData()
-    form.append('files[]', mediaBuffer, { filename: `file.${fileType.ext}` })
+    form.append('reqtype', 'fileupload')
+    form.append('userhash', '') // Optional: Put your Catbox userhash here if you want persistent upload
+    form.append('fileToUpload', mediaBuffer, `upload.${fileType.ext}`)
 
-    const uploadRes = await axios.post('https://uguu.se/upload.php', form, {
-      headers: {
-        ...form.getHeaders()
-      }
+    const uploadRes = await axios.post('https://catbox.moe/user/api.php', form, {
+      headers: form.getHeaders()
     })
 
-    console.log('[Uguu Upload Response]', uploadRes.data)
+    console.log('[Catbox Upload Response]', uploadRes.data)
 
-    const url = uploadRes?.data?.files?.[0]?.url
-    if (!url) throw 'Upload failed: Invalid response'
+    const url = uploadRes.data
+    if (!url.startsWith('https://')) throw 'Upload failed: Invalid URL returned'
 
     const fileSizeMB = (mediaBuffer.length / (1024 * 1024)).toFixed(2)
-    m.reply(`✅ *Upload Successful!*\n📎 *URL:* ${url}\n💾 *Size:* ${fileSizeMB} MB`)
+    m.reply(`✅ *Upload Successful!*
+📎 *URL:* ${url}
+💾 *Size:* ${fileSizeMB} MB`)
 
   } catch (e) {
-    console.error('[Upload Error]', e)
+    console.error('[Catbox Upload Error]', e)
     m.reply(`❌ Upload failed: ${e.message || e}`)
   }
 }
