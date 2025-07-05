@@ -1,44 +1,49 @@
-import uploadtoimgur from '../lib/imgur.js'
 import fs from 'fs'
 import path from 'path'
+import fetch from 'node-fetch'
+import axios from 'axios'
+import FormData from 'form-data'
+import { fileTypeFromBuffer } from 'file-type'
 
 let handler = async m => {
   let q = m.quoted ? m.quoted : m
   let mime = (q.msg || q).mimetype || ''
 
-  if (!mime) {
-    throw '✳️ Respond to an image/video'
-  }
+  if (!mime) throw '✳️ Respond to an image, video, sticker, or audio'
+
   let mediaBuffer = await q.download()
 
   if (mediaBuffer.length > 10 * 1024 * 1024) {
     throw '✴️ Media size exceeds 10 MB. Please upload a smaller file.'
   }
 
-  let currentModuleDirectory = path.dirname(new URL(import.meta.url).pathname)
+  try {
+    // ✅ Correct: Use fileTypeFromBuffer instead of fromBuffer
+    const fileType = await fileTypeFromBuffer(mediaBuffer)
+    if (!fileType?.ext) throw '❌ Could not determine file type.'
 
-  let tmpDir = path.join(currentModuleDirectory, '../tmp')
-  if (!fs.existsSync(tmpDir)) {
-    fs.mkdirSync(tmpDir)
-  }
+    // Prepare form data for Uguu.se
+    const form = new FormData()
+    form.append('files[]', mediaBuffer, { filename: `file.${fileType.ext}` })
 
-  let mediaPath = path.join(tmpDir, `media_${Date.now()}.${mime.split('/')[1]}`)
-  fs.writeFileSync(mediaPath, mediaBuffer)
+    const uploadRes = await axios.post('https://uguu.se/upload.php', form, {
+      headers: {
+        ...form.getHeaders()
+      }
+    })
 
-  let isTele = /image\/(png|jpe?g|gif)|video\/mp4/.test(mime)
+    console.log('[Uguu Upload Response]', uploadRes.data)
 
-  if (isTele) {
-    let link = await uploadtoimgur(mediaPath)
+    const url = uploadRes?.data?.files?.[0]?.url
+    if (!url) throw 'Upload failed: Invalid response'
 
     const fileSizeMB = (mediaBuffer.length / (1024 * 1024)).toFixed(2)
+    m.reply(`✅ *Upload Successful!*\n📎 *URL:* ${url}\n💾 *Size:* ${fileSizeMB} MB`)
 
-    m.reply(`✅ *Media Upload Successful*\n☆ *File Size:* ${fileSizeMB} MB\n☆ *URL:* ${link}`)
-  } else {
-    m.reply(`☆ ${mediaBuffer.length} Byte(s) 
-    ☆ (Unknown)`)
+  } catch (e) {
+    console.error('[Upload Error]', e)
+    m.reply(`❌ Upload failed: ${e.message || e}`)
   }
-
-  fs.unlinkSync(mediaPath)
 }
 
 handler.help = ['tourl']
