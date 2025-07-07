@@ -1,14 +1,24 @@
 import fetch from 'node-fetch';
 
-const fetchWithRetry = async (url, options = {}, retries = 3) => {
+// Custom fetch with retry and timeout
+const fetchWithTimeoutRetry = async (url, options = {}, retries = 3, timeout = 30000) => {
   for (let i = 0; i < retries; i++) {
     try {
-      const response = await fetch(url, options);
-      if (response.ok) return response;
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeout);
+
+      const res = await fetch(url, {
+        ...options,
+        signal: controller.signal
+      });
+
+      clearTimeout(timer);
+
+      if (res.ok) return res;
+      console.log(`Retry ${i + 1} failed with status ${res.status}`);
     } catch (err) {
-      console.log(`Fetch error: ${err.message}`);
+      console.log(`Retry ${i + 1} error: ${err.name} - ${err.message}`);
     }
-    console.log(`Retrying... (${i + 1})`);
   }
   throw new Error('❌ Failed to fetch media content after retries.');
 };
@@ -27,14 +37,8 @@ const handler = async (m, { args, conn }) => {
 
   try {
     const api = `https://ytdlp.giftedtech.web.id/api/video.php?url=${encodeURIComponent(url)}`;
-    const response = await fetchWithRetry(api);
-
-    let json;
-    try {
-      json = await response.json();
-    } catch {
-      throw new Error('❌ Failed to parse JSON from API.');
-    }
+    const res = await fetch(api);
+    const json = await res.json();
 
     if (!json.success || !json.result || !json.result.stream_url) {
       throw new Error('❌ Video data is incomplete or unavailable.');
@@ -56,31 +60,32 @@ const handler = async (m, { args, conn }) => {
       `ℹ️ *Info:* ${info}\n\n` +
       `🔧 *Powered by:* MEGA-AI`;
 
-    const mediaResponse = await fetchWithRetry(stream_url, {
+    // Try downloading video with 30s timeout and retry logic
+    const mediaRes = await fetchWithTimeoutRetry(stream_url, {
       headers: {
         'User-Agent': 'Mozilla/5.0',
         'Accept': '*/*'
       }
-    });
+    }, 3, 30000);
 
-    const contentType = mediaResponse.headers.get('content-type');
-    if (!contentType || !contentType.includes('video')) {
-      throw new Error('❌ Invalid video content type.');
-    }
+    const contentType = mediaRes.headers.get('content-type') || '';
+    if (!contentType.includes('video'))
+      throw new Error(`❌ Invalid content-type: ${contentType}`);
 
-    const arrayBuffer = await mediaResponse.arrayBuffer();
+    const arrayBuffer = await mediaRes.arrayBuffer();
     const mediaBuffer = Buffer.from(arrayBuffer);
-    if (mediaBuffer.length === 0) throw new Error('❌ Downloaded video is empty.');
+
+    if (!mediaBuffer.length) throw new Error('❌ Downloaded video is empty.');
 
     await conn.sendFile(m.chat, mediaBuffer, `ytvideo.mp4`, caption, m, false, {
       mimetype: 'video/mp4',
-      thumbnail: thumbnail
+      thumbnail
     });
 
     await m.react('✅');
   } catch (err) {
-    console.error('YT Error:', err.message);
-    await m.reply(err.message || '❌ Failed to download video. Try again later.');
+    console.error('[YTMP4 ERROR]', err.message);
+    await m.reply(err.message || '❌ Failed to download video.');
     await m.react('❌');
   }
 };
