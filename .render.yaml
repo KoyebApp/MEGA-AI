@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: mega
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: BOT_TOKEN
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      # ...add all other variables here, set value or sync: false to fill in UI
