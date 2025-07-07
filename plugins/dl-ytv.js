@@ -1,6 +1,5 @@
 import fetch from 'node-fetch';
 
-// Custom fetch with retry and timeout
 const fetchWithTimeoutRetry = async (url, options = {}, retries = 3, timeout = 30000) => {
   for (let i = 0; i < retries; i++) {
     try {
@@ -40,9 +39,13 @@ const handler = async (m, { args, conn }) => {
     const res = await fetch(api);
     const json = await res.json();
 
-    if (!json.success || !json.result || !json.result.stream_url) {
-      throw new Error('❌ Video data is incomplete or unavailable.');
-    }
+    // 🔍 Log full API response
+    console.log('[🔍 API RESPONSE]:', JSON.stringify(json, null, 2));
+
+    // 🔎 Check structure
+    if (!json.success) throw new Error('❌ API responded with success: false');
+    if (!json.result) throw new Error('❌ API response missing result field');
+    if (!json.result.stream_url) throw new Error('❌ API response missing stream_url field');
 
     const {
       title = 'Unknown Title',
@@ -60,7 +63,6 @@ const handler = async (m, { args, conn }) => {
       `ℹ️ *Info:* ${info}\n\n` +
       `🔧 *Powered by:* MEGA-AI`;
 
-    // Try downloading video with 30s timeout and retry logic
     const mediaRes = await fetchWithTimeoutRetry(stream_url, {
       headers: {
         'User-Agent': 'Mozilla/5.0',
@@ -84,7 +86,7 @@ const handler = async (m, { args, conn }) => {
 
     await m.react('✅');
   } catch (err) {
-    console.error('[YTMP4 ERROR]', err.message);
+    console.error('[❌ YTMP4 ERROR]', err.message);
     await m.reply(err.message || '❌ Failed to download video.');
     await m.react('❌');
   }
