@@ -35,23 +35,28 @@ const handler = async (m, { args, conn }) => {
   await m.react('⏳');
 
   try {
-    const api = `https://ytdlp.giftedtech.web.id/api/video.php?url=${encodeURIComponent(url)}`;
+    const api = `https://ytdlp.giftedtech.web.id/api/video.php?url=${encodeURIComponent(url)}&format=360`;
     const res = await fetch(api);
     const json = await res.json();
 
-    // 🔍 Log full API response
     console.log('[🔍 API RESPONSE]:', JSON.stringify(json, null, 2));
 
-    // 🔎 Check structure
-    if (!json.success) throw new Error('❌ API responded with success: false');
-    if (!json.result) throw new Error('❌ API response missing result field');
-    if (!json.result.stream_url) throw new Error('❌ API response missing stream_url field');
+    if (!json.success) {
+      const errorMsg = json.error?.includes('Requested format is not available')
+        ? '❌ Requested format is not available.\n👉 Try another video.'
+        : `❌ API Error: ${json.error || 'Unknown error'}`;
+      throw new Error(errorMsg);
+    }
+
+    if (!json.result?.stream_url) {
+      throw new Error('❌ Video stream URL not found. Try a different link.');
+    }
 
     const {
       title = 'Unknown Title',
       thumbnail,
       stream_url,
-      format = 'N/A',
+      format = '360p',
       src_url = url,
       info = ''
     } = json.result;
@@ -87,7 +92,7 @@ const handler = async (m, { args, conn }) => {
     await m.react('✅');
   } catch (err) {
     console.error('[❌ YTMP4 ERROR]', err.message);
-    await m.reply(err.message || '❌ Failed to download video.');
+    await m.reply(err.message);
     await m.react('❌');
   }
 };
