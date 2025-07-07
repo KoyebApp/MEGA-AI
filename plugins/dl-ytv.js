@@ -1,12 +1,16 @@
 import fetch from 'node-fetch';
 
-const fetchWithRetry = async (url, options, retries = 3) => {
+const fetchWithRetry = async (url, options = {}, retries = 3) => {
   for (let i = 0; i < retries; i++) {
-    const response = await fetch(url, options);
-    if (response.ok) return response;
+    try {
+      const response = await fetch(url, options);
+      if (response.ok) return response;
+    } catch (err) {
+      console.log(`Fetch error: ${err.message}`);
+    }
     console.log(`Retrying... (${i + 1})`);
   }
-  throw new Error('Failed to fetch media content after retries');
+  throw new Error('❌ Failed to fetch media content after retries.');
 };
 
 const handler = async (m, { args, conn }) => {
@@ -23,20 +27,26 @@ const handler = async (m, { args, conn }) => {
 
   try {
     const api = `https://ytdlp.giftedtech.web.id/api/video.php?url=${encodeURIComponent(url)}`;
-    const response = await fetch(api);
-    const json = await response.json();
+    const response = await fetchWithRetry(api);
+
+    let json;
+    try {
+      json = await response.json();
+    } catch {
+      throw new Error('❌ Failed to parse JSON from API.');
+    }
 
     if (!json.success || !json.result || !json.result.stream_url) {
-      throw new Error('Video data is incomplete or unavailable.');
+      throw new Error('❌ Video data is incomplete or unavailable.');
     }
 
     const {
-      title,
+      title = 'Unknown Title',
       thumbnail,
       stream_url,
-      format,
-      src_url,
-      info
+      format = 'N/A',
+      src_url = url,
+      info = ''
     } = json.result;
 
     const caption = `*🔽 MEGA-AI YT DOWNLOADER*\n\n` +
@@ -54,12 +64,13 @@ const handler = async (m, { args, conn }) => {
     });
 
     const contentType = mediaResponse.headers.get('content-type');
-    if (!contentType || !contentType.includes('video'))
-      throw new Error('Invalid video content type');
+    if (!contentType || !contentType.includes('video')) {
+      throw new Error('❌ Invalid video content type.');
+    }
 
     const arrayBuffer = await mediaResponse.arrayBuffer();
     const mediaBuffer = Buffer.from(arrayBuffer);
-    if (mediaBuffer.length === 0) throw new Error('Downloaded video is empty');
+    if (mediaBuffer.length === 0) throw new Error('❌ Downloaded video is empty.');
 
     await conn.sendFile(m.chat, mediaBuffer, `ytvideo.mp4`, caption, m, false, {
       mimetype: 'video/mp4',
@@ -69,7 +80,7 @@ const handler = async (m, { args, conn }) => {
     await m.react('✅');
   } catch (err) {
     console.error('YT Error:', err.message);
-    await m.reply('❌ Failed to download video. Please try another link or try again later.');
+    await m.reply(err.message || '❌ Failed to download video. Try again later.');
     await m.react('❌');
   }
 };
