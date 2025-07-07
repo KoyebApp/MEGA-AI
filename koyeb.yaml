@@ -1,0 +1,15 @@
+name: mega
+services:
+  - name: mega
+    dockerfile_path: ./Dockerfile
+    ports:
+      - internal: 5000
+        external: 5000
+    routes:
+      - path: /
+    env:
+      PORT: 5000
+      BOT_TOKEN: ${BOT_TOKEN}
+      SESSION_SECRET: ${SESSION_SECRET}
+      REDIS_URL: ${REDIS_URL}
+      # ...add all other vars as needed
