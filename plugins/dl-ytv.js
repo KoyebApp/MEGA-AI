@@ -22,6 +22,20 @@ const fetchWithTimeoutRetry = async (url, options = {}, retries = 3, timeout = 3
   throw new Error('❌ Failed to fetch media content after retries.');
 };
 
+const fetchVideoMetadata = async (url, format = '') => {
+  const api = `https://ytdlp.giftedtech.web.id/api/video.php?url=${encodeURIComponent(url)}${format ? `&format=${format}` : ''}`;
+  const res = await fetch(api);
+  const json = await res.json();
+
+  console.log(`[📦 API FORMAT ${format || 'default'}] RESPONSE:`, JSON.stringify(json, null, 2));
+
+  if (!json.success || !json.result?.stream_url) {
+    throw new Error(json.error || 'Invalid API response');
+  }
+
+  return json.result;
+};
+
 const handler = async (m, { args, conn }) => {
   if (!args.length) return m.reply('❌ Please provide a YouTube URL.');
 
@@ -29,37 +43,35 @@ const handler = async (m, { args, conn }) => {
   const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
   if (!youtubeRegex.test(url)) {
     await m.react('❌');
-    return m.reply('⚠️ Invalid YouTube URL. Please provide a valid one.');
+    return m.reply('⚠️ Invalid YouTube URL.');
   }
 
   await m.react('⏳');
 
   try {
-    const api = `https://ytdlp.giftedtech.web.id/api/video.php?url=${encodeURIComponent(url)}&format=360`;
-    const res = await fetch(api);
-    const json = await res.json();
+    let videoData;
 
-    console.log('[🔍 API RESPONSE]:', JSON.stringify(json, null, 2));
-
-    if (!json.success) {
-      const errorMsg = json.error?.includes('Requested format is not available')
-        ? '❌ Requested format is not available.\n👉 Try another video.'
-        : `❌ API Error: ${json.error || 'Unknown error'}`;
-      throw new Error(errorMsg);
-    }
-
-    if (!json.result?.stream_url) {
-      throw new Error('❌ Video stream URL not found. Try a different link.');
+    // Step 1: Try with 360p
+    try {
+      videoData = await fetchVideoMetadata(url, '360');
+    } catch (err1) {
+      console.log('360p failed, trying fallback...');
+      // Step 2: Fallback to default format
+      try {
+        videoData = await fetchVideoMetadata(url);
+      } catch (err2) {
+        throw new Error('❌ Could not retrieve video in 360p or any other quality.\n👉 Try another video.');
+      }
     }
 
     const {
       title = 'Unknown Title',
       thumbnail,
       stream_url,
-      format = '360p',
+      format = 'unknown',
       src_url = url,
       info = ''
-    } = json.result;
+    } = videoData;
 
     const caption = `*🔽 MEGA-AI YT DOWNLOADER*\n\n` +
       `🎬 *Title:* ${title}\n` +
@@ -77,11 +89,10 @@ const handler = async (m, { args, conn }) => {
 
     const contentType = mediaRes.headers.get('content-type') || '';
     if (!contentType.includes('video'))
-      throw new Error(`❌ Invalid content-type: ${contentType}`);
+      throw new Error(`❌ Invalid video content-type: ${contentType}`);
 
     const arrayBuffer = await mediaRes.arrayBuffer();
     const mediaBuffer = Buffer.from(arrayBuffer);
-
     if (!mediaBuffer.length) throw new Error('❌ Downloaded video is empty.');
 
     await conn.sendFile(m.chat, mediaBuffer, `ytvideo.mp4`, caption, m, false, {
@@ -103,3 +114,4 @@ handler.command = ['ytmp4', 'ytv'];
 handler.limit = true;
 
 export default handler;
+      
