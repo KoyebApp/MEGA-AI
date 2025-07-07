@@ -697,22 +697,12 @@ async function generateDatabaseStats() {
 ┌─────────────────────────────┐
 │   🤖 MEGA-AI DASHBOARD 🤖   │
 ├─────────────────────────────┤
-│                             │
 │ 👥 Users: ${padRight(stats.users, 19)} │
-│ 🛡️ Banned Users: ${padRight(stats.bannedUsers, 13)} │
 │ 📝 Registered: ${padRight(stats.registeredUsers, 14)} │
-│                             │
 │ 👥 Groups: ${padRight(stats.groups, 18)} │
 │ 💬 Private Chats: ${padRight(stats.privateChats, 11)} │
-│ 📊 Total Chats: ${padRight(stats.totalChats, 13)} │
-│ 🟢 Active Groups: ${padRight(stats.activeGroups, 11)} │
-│                             │
 │ ⚙️ Settings: ${padRight(stats.settings, 16)} │
-│ 🔌 Plugins: ${padRight(stats.plugins, 17)} │
-│                             │
 │ ⏱️ Uptime: ${padRight(stats.uptime, 18)} │
-│ 💾 Memory: ${padRight(stats.memoryUsage, 18)} │
-│                             │
 ${stats.topPlugins ? `│ 🔝 Top Plugins:               │\n${stats.topPlugins.map(p => `│   • ${padRight(p.name.replace('.js', ''), 20)} ${p.total} │`).join('\n')}` : ''}
 └─────────────────────────────┘
     `.trim()
