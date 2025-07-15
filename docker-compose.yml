@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  mega-ai:
+    image: quay.io/qasimtech/mega-ai:latest
+    container_name: mega-ai
+    restart: unless-stopped
+    working_dir: /root/mega-ai
+    volumes:
+      - mega_ai_data:/root/mega-ai
+      - ./watch.sh:/root/mega-ai/watch.sh
+    ports:
+      - "5000:5000"
+    command: sh -c "
+      git clone https://github.com/GlobalTechInfo/MEGA-AI /root/mega-ai || true &&
+      rm -rf /root/mega-ai/.git &&
+      chmod +x /root/mega-ai/watch.sh &&
+      cd /root/mega-ai &&
+      npm install || yarn install &&
+      ./watch.sh"
+
+volumes:
+  mega_ai_data:
+  
