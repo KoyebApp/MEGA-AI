@@ -22,7 +22,7 @@ You **must have Docker and Docker Compose installed** on your system **unless yo
 
 | 🌍 Environment                | 🐳 Docker Needed | 📌 Notes                                                                 |
 |------------------------------|------------------|-------------------------------------------------------------------------|
-| 📱 Termux (via proot/Alpine) | ✅ Yes           | Manual setup with `docker` + `dockerd`; best with Alpine in PRoot      |
+| 📱 Termux (via Alpine VM) | ✅ Yes           | Manual setup with `docker` + `dockerd`; best with Alpine in      |
 | 🐧 Ubuntu / Debian            | ✅ Yes           | Run: `apt install docker.io docker-compose`                            |
 | 🧱 Arch / Manjaro             | ✅ Yes           | Run: `pacman -S docker docker-compose`                                 |
 | 🔧 Fedora / RHEL / CentOS     | ✅ Yes           | Use `dnf install docker` or Docker CE script                           |
@@ -40,7 +40,6 @@ You **must have Docker and Docker Compose installed** on your system **unless yo
 ![Windows](https://img.shields.io/badge/Windows-Supported-success?logo=windows)
 ![macOS](https://img.shields.io/badge/macOS-Supported-success?logo=apple)
 ![Termux](https://img.shields.io/badge/Termux-Tested-yellow?logo=termux)
-![Cloud Platforms](https://img.shields.io/badge/Render%20%2F%20Koyeb%20%2F%20Railway-Works%20behind%20scenes-lightgrey?logo=vercel)
 
 </details> <details> <summary>🛠 <strong>Ubuntu / Debian</strong></summary>
 bash
@@ -66,6 +65,7 @@ sudo apt update
 sudo apt install docker.io docker-compose -y
 sudo usermod -aG docker $USER
 newgrp docker
+</details>
 
 ## 🔧 `docker-compose.yml` Explained
 
