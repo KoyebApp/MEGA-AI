@@ -22,7 +22,7 @@ You **must have Docker and Docker Compose installed** on your system **unless yo
 
 | 🌍 Environment                | 🐳 Docker Needed | 📌 Notes                                                                 |
 |------------------------------|------------------|-------------------------------------------------------------------------|
-| 📱 Termux (via Alpine VM) | ✅ Yes           | Manual setup with `docker` + `dockerd`; best with Alpine in      |
+| 📱 Termux (via Alpine VM) | ✅ Yes           | Manual setup with `docker` + `dockerd`     |
 | 🐧 Ubuntu / Debian            | ✅ Yes           | Run: `apt install docker.io docker-compose`                            |
 | 🧱 Arch / Manjaro             | ✅ Yes           | Run: `pacman -S docker docker-compose`                                 |
 | 🔧 Fedora / RHEL / CentOS     | ✅ Yes           | Use `dnf install docker` or Docker CE script                           |
@@ -31,7 +31,7 @@ You **must have Docker and Docker Compose installed** on your system **unless yo
 | 🐘 Rocky / AlmaLinux          | ✅ Yes           | Use Docker CE install script or Podman as an alternative               |
 | 🪟 Windows (with WSL2)        | ✅ Yes (via Docker Desktop) | Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) |
 | 🧩 Docker Desktop (Win/macOS) | ✅ Yes           | Simplest method — official GUI app                                     |
-| 💻 Chromebook (Linux/Termux)  | ⚠️ Limited       | Works via Linux Beta or Termux with PRoot workaround                   |
+| 💻 Chromebook (Linux/Termux)  | ⚠️ Limited       | Works via Linux Beta or Termux with workaround                   |
 | ☁️ Render / Koyeb / Railway   | ❌ No            | Docker runs behind the scenes automatically                           |
 
 ---
@@ -42,29 +42,73 @@ You **must have Docker and Docker Compose installed** on your system **unless yo
 ![Termux](https://img.shields.io/badge/Termux-Tested-yellow?logo=termux)
 
 </details> <details> <summary>🛠 <strong>Ubuntu / Debian</strong></summary>
-bash
-Copy code
+
+  ```bash
 sudo apt update
 sudo apt install docker.io docker-compose -y
 sudo systemctl enable --now docker
+```
 
 </details> <details> <summary>🛠 <strong>Windows (Docker Desktop)</strong></summary>
-Download from: https://www.docker.com/products/docker-desktop
+  
+- Download from: https://www.docker.com/products/docker-desktop
 
-Enable WSL2 backend during installation
+- Enable WSL2 backend during installation
 
-Run docker --version to verify setup
+- Run docker --version to verify setup
 
-Use PowerShell or WSL for Compose commands
+- Use PowerShell or WSL for Compose commands
 
 </details> <details> <summary>🛠 <strong>Chromebook (Crostini)</strong></summary>
-bash
-Copy code
+
+  ```bash
 # Inside Crostini Linux terminal
 sudo apt update
 sudo apt install docker.io docker-compose -y
 sudo usermod -aG docker $USER
 newgrp docker
+  ```
+</details> <details>
+<summary>🛠 <strong>Alpine Linux</strong></summary>
+
+```bash
+# Alpine setup
+apk update
+apk add docker docker-cli docker-compose-plugin openrc
+
+# Enable Docker to run at boot
+rc-update add docker boot
+service docker start
+
+# Optional: allow non-root access
+addgroup $USER docker
+newgrp docker
+```
+</details> <details> <summary>🛠 <strong>Arch Linux / Manjaro</strong></summary>
+
+  ```bash
+# Arch / Manjaro setup
+sudo pacman -Syu docker docker-compose
+# Enable and start Docker
+sudo systemctl enable --now docker
+# Optional: add current user to docker group
+sudo usermod -aG docker $USER
+newgrp docker
+```
+</details> <details> <summary>🛠 <strong>Fedora</strong></summary>
+
+  ```bash
+# Fedora setup
+sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager \
+    --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+# Start and enable Docker
+sudo systemctl enable --now docker
+# Optional: add current user to docker group
+sudo usermod -aG docker $USER
+newgrp docker
+```
 </details>
 
 ## 🔧 `docker-compose.yml` Explained
@@ -145,7 +189,6 @@ Make sure the script is executable:
 ```bash
 chmod +x watch.sh
 ```
-
 ---
 
 ## 🚀 How to Deploy Locally
@@ -184,7 +227,7 @@ OWNERS = '92320xxxx,92300xxxx'                      # your Whatsapp phone number
 ### 3. Run the Bot:
 
 ```bash
-docker-compose up --build -d
+docker-compose up -d
 ```
 ### 4. To verify everything is running:
 
