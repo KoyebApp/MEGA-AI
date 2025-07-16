@@ -152,5 +152,3 @@ node_modules
 ## 🧠 Notes
 
 - **Don't rename `watch.sh`** unless you also update the reference in `docker-compose.yml`.
-- You can reuse the same `quay.io/qasimtech/mega-ai` image for both `MEGA-AI` and `GLOBAL-XMD` bots as long as their dependencies match.
-- Each bot should have its own folder and docker-compose file.
