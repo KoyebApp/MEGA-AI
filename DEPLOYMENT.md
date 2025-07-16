@@ -20,13 +20,52 @@ You **must have Docker and Docker Compose installed** on your system **unless yo
 
 ### ✅ Supported Environments
 
-| Environment      | Docker Needed | Notes                          |
-|------------------|---------------|--------------------------------|
-| Termux (via proot or Alpine) | ✅          | Needs `docker` setup manually |
-| Ubuntu / Debian  | ✅             | Use `apt install docker.io docker-compose` |
-| Render / Koyeb / Railway | ❌             | Docker runs behind the scenes |
+| 🌍 Environment                | 🐳 Docker Needed | 📌 Notes                                                                 |
+|------------------------------|------------------|-------------------------------------------------------------------------|
+| 📱 Termux (via proot/Alpine) | ✅ Yes           | Manual setup with `docker` + `dockerd`; best with Alpine in PRoot      |
+| 🐧 Ubuntu / Debian            | ✅ Yes           | Run: `apt install docker.io docker-compose`                            |
+| 🧱 Arch / Manjaro             | ✅ Yes           | Run: `pacman -S docker docker-compose`                                 |
+| 🔧 Fedora / RHEL / CentOS     | ✅ Yes           | Use `dnf install docker` or Docker CE script                           |
+| 🧊 Alpine Linux               | ✅ Yes           | Use `apk add docker openrc`, enable and start `dockerd`                |
+| 🛡️ Kali Linux                | ✅ Yes           | Same as Debian — use `apt install docker.io`                           |
+| 🐘 Rocky / AlmaLinux          | ✅ Yes           | Use Docker CE install script or Podman as an alternative               |
+| 🪟 Windows (with WSL2)        | ✅ Yes (via Docker Desktop) | Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) |
+| 🧩 Docker Desktop (Win/macOS) | ✅ Yes           | Simplest method — official GUI app                                     |
+| 💻 Chromebook (Linux/Termux)  | ⚠️ Limited       | Works via Linux Beta or Termux with PRoot workaround                   |
+| ☁️ Render / Koyeb / Railway   | ❌ No            | Docker runs behind the scenes automatically                           |
 
 ---
+![Docker](https://img.shields.io/badge/Works%20with-Docker-blue?logo=docker)
+![Linux](https://img.shields.io/badge/Linux-Supported-success?logo=linux)
+![Windows](https://img.shields.io/badge/Windows-Supported-success?logo=windows)
+![macOS](https://img.shields.io/badge/macOS-Supported-success?logo=apple)
+![Termux](https://img.shields.io/badge/Termux-Tested-yellow?logo=termux)
+![Cloud Platforms](https://img.shields.io/badge/Render%20%2F%20Koyeb%20%2F%20Railway-Works%20behind%20scenes-lightgrey?logo=vercel)
+
+</details> <details> <summary>🛠 <strong>Ubuntu / Debian</strong></summary>
+bash
+Copy code
+sudo apt update
+sudo apt install docker.io docker-compose -y
+sudo systemctl enable --now docker
+
+</details> <details> <summary>🛠 <strong>Windows (Docker Desktop)</strong></summary>
+Download from: https://www.docker.com/products/docker-desktop
+
+Enable WSL2 backend during installation
+
+Run docker --version to verify setup
+
+Use PowerShell or WSL for Compose commands
+
+</details> <details> <summary>🛠 <strong>Chromebook (Crostini)</strong></summary>
+bash
+Copy code
+# Inside Crostini Linux terminal
+sudo apt update
+sudo apt install docker.io docker-compose -y
+sudo usermod -aG docker $USER
+newgrp docker
 
 ## 🔧 `docker-compose.yml` Explained
 
