@@ -135,14 +135,14 @@ services:
     ports:
       - "5000:5000"
     environment:
-      MONGODB_URI: ${MONGODB_URI:-mongodb://localhost:27017}
-      BOT_NUMBER: ${BOT_NUMBER:-923204566005}
-      REMOVEBG_KEY: ${REMOVEBG_KEY:-none}
-      TIME_ZONE: ${TIME_ZONE:-Asia/Karachi}
-      BOTNAME: ${BOTNAME:-MEGA-BOT}
-      OWNERS: ${OWNERS:-923204566005}
-      MODE: ${MODE:-public}
-      PREFIX: ${PREFIX:-.}
+      MONGODB_URI: ${MONGODB_URI}
+      BOT_NUMBER: ${BOT_NUMBER}
+      REMOVEBG_KEY: ${REMOVEBG_KEY}
+      TIME_ZONE: ${TIME_ZONE}
+      BOTNAME: ${BOTNAME}
+      OWNERS: ${OWNERS}
+      MODE: ${MODE}
+      PREFIX: ${PREFIX}
     command: sh -c "
       git clone https://github.com/GlobalTechInfo/MEGA-AI /root/mega || true &&
       rm -rf /root/mega/.git &&
@@ -204,21 +204,21 @@ cd MEGA-AI
 
 - Following is example to set environment variables
 ```env
-HOBBIES = 'CODING'
-LANGUAGE = 'ENGLISH'
-OWNER_SKILLS = 'JAVASCRIPT'
-OWNER_STATUS = 'DEVELOPER'
-OWNER_NAME = 'Qasim Ali'
-TIME_ZONE = 'Asia/Karachi'
-MONGODB_URI = 'mongodb+srv://.....'                 # your MongoDB connection url
-DB_NAME = 'mega_ai'                                 # database name
-REMOVEBG_KEY = ''                                   # obtain a key from ( www.remove.bg )
-PREFIX = '!,.,?'                                    #one or more,remove this if you want multiprefix
-MODE = 'private'                                    # public or private
-statusview = 'true'                                 # make it false if you don't want auto status view
-BOTNAME = 'MEGA-AI'                                 # your bot name
-antidelete = 'true'                                 # if true bot will forwards deleted message to you
-BOT_NUMBER= '9232045xxxx'                           # your whatsapp phone number for pairing code
+HOBBIES = 'CODING'                                  # Your Hobbies                                    ( optional )
+LANGUAGE = 'ENGLISH'                                # Your Language                                   ( optional )
+OWNER_SKILLS = 'JAVASCRIPT'                         # Your Skills                                     ( optional )
+OWNER_STATUS = 'DEVELOPER'                          # Status/Occupation                               ( optional )
+OWNER_NAME = 'Qasim Ali'                            # Your Name                                       ( optional )
+TIME_ZONE = 'Asia/Karachi'                          # Your Time Zone                  ( required )
+MONGODB_URI = 'mongodb+srv://.....'                 # your MongoDB connection url     ( required )
+DB_NAME = 'mega_ai'                                 # database name                                    ( optional )
+REMOVEBG_KEY = ''                                   # obtain a key from ( www.remove.bg )              ( optional )
+PREFIX = '!,.,?'                                    # one or more,remove this if you want multiprefix  ( optional )
+MODE = 'private'                                    # public or private                                ( optional )
+statusview = 'true'                                 # make it false if you don't want auto status view ( optional )
+BOTNAME = 'MEGA-AI'                                 # your bot name                                    ( optional )
+antidelete = 'true'                                 # if true bot will forwards deleted message to you ( optional )
+BOT_NUMBER= '9232045xxxx'                           # your whatsapp phone number for pairing code ( required )
 OWNERS = '92320xxxx,92300xxxx'                      # your Whatsapp phone number,your second Whatsapp phone number
 ```
 
